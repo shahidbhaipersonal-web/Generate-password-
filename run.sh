@@ -1,19 +1,46 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+# COLORS
+G="\e[1;32m"
+R="\e[1;31m"
+C="\e[1;36m"
+Y="\e[1;33m"
+N="\e[0m"
+
 clear
 
+# ===== BANNER =====
+echo -e $G
+echo " ███████╗ ███╗   ███╗ █████╗ ██████╗ ████████╗"
+echo " ██╔════╝ ████╗ ████║██╔══██╗██╔══██╗╚══██╔══╝"
+echo " ███████╗ ██╔████╔██║███████║██████╔╝   ██║   "
+echo " ╚════██║ ██║╚██╔╝██║██╔══██║██╔══██╗   ██║   "
+echo " ███████║ ██║ ╚═╝ ██║██║  ██║██║  ██║   ██║   "
+echo " ╚══════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   "
+echo -e $C
+echo "        SMART PASSWORD TOOL"
+echo -e $N
+
+# ===== LOADING =====
+echo -ne $Y"Loading "
+for i in {1..5}
+do
+echo -n "."
+sleep 0.4
+done
+echo -e "\n"$N
+
+# ===== MENU LOOP =====
 while true
 do
-echo -e "\e[1;32m"
-echo "================================="
-echo "     SMART PASSWORD TOOL"
+echo -e $G
 echo "================================="
 echo "1. Generate Passwords"
 echo "2. View Password List"
 echo "3. Delete Password List"
 echo "4. Exit"
 echo "================================="
-echo -e "\e[0m"
+echo -e $N
 
 read -p "Select Option: " choice
 
@@ -29,7 +56,7 @@ clear
 if [ -f passwords.txt ]; then
 less passwords.txt
 else
-echo "No password file found!"
+echo -e $R"No password file found!"$N
 sleep 2
 fi
 clear
@@ -37,18 +64,18 @@ clear
 
 3)
 rm -f passwords.txt
-echo "Password list deleted ✅"
+echo -e $C"Password list deleted ✅"$N
 sleep 2
 clear
 ;;
 
 4)
-echo "Goodbye 👋"
+echo -e $Y"Goodbye 👋"$N
 exit
 ;;
 
 *)
-echo "Invalid option!"
+echo -e $R"Invalid option!"$N
 sleep 2
 clear
 ;;
