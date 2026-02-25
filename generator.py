@@ -1,51 +1,64 @@
 import random
 import string
 
-print("=== Smart Sequential Password Generator ===")
+print("=== Smart Progressive Password Generator ===")
 
 name = input("Enter Name: ").strip()
-nickname = input("Enter Nickname: ").strip()
-year = input("Enter Birth Year: ")
-
 total = int(input("How many passwords generate: "))
 
-# character sets
-lower = string.ascii_lowercase
-upper = string.ascii_uppercase
-digits = string.digits
 symbols = "@#$!_."
+letters = string.ascii_letters   # small + CAPITAL
+digits = string.digits
 
-def strong_tail():
-    # ensure all types included
-    part = [
-        random.choice(lower),
-        random.choice(upper),
-        random.choice(digits),
-        random.choice(symbols)
-    ]
-    extra = ''.join(random.choice(lower+upper+digits+symbols)
-                    for _ in range(3))
-    random.shuffle(part)
-    return ''.join(part) + extra
+passwords = set()   # no duplicate
 
-passwords = []
+# random number generator
+def rand_num():
+    return ''.join(random.choice(digits)
+                   for _ in range(random.randint(1,4)))
 
-half = total // 2
+# random mixed part
+def random_mix(length):
+    chars = letters + digits + symbols
+    return ''.join(random.choice(chars) for _ in range(length))
 
-# ---- NAME BASE PASSWORDS ----
-for _ in range(half):
-    pwd = name + year + strong_tail()
-    passwords.append(pwd)
+# -------- SIMPLE → HARD PROGRESSION --------
+level = 1
 
-# ---- NICKNAME BASE PASSWORDS ----
-for _ in range(total - half):
-    pwd = nickname + year + strong_tail()
-    passwords.append(pwd)
+while len(passwords) < total:
+
+    # Level 1 (simple)
+    if level == 1:
+        pwd = name + rand_num()
+
+    # Level 2 (lowercase mix)
+    elif level == 2:
+        pwd = name.lower() + rand_num()
+
+    # Level 3 (symbol added)
+    elif level == 3:
+        pwd = name + rand_num() + random.choice(symbols)
+
+    # Level 4 (random alphabet insert)
+    elif level == 4:
+        pwd = name + random.choice(letters) + rand_num()
+
+    # Level 5 (hard mix)
+    else:
+        pwd = name + random_mix(random.randint(3,7))
+
+    passwords.add(pwd)
+
+    # difficulty gradually increase
+    if len(passwords) % (total//5 if total>=5 else 1) == 0:
+        level += 1
+        if level > 5:
+            level = 5
 
 # save file
-with open("passwords.txt", "w") as f:
+with open("passwords.txt","w") as f:
     for p in passwords:
         f.write(p + "\n")
 
-print("\n✅ Passwords generated successfully!")
+print("\n✅ Passwords generated (No duplicates)")
 print("📄 Saved in passwords.txt")
